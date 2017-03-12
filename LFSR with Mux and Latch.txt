@@ -1,0 +1,40 @@
+
+module sub_module (
+	input clk,
+	input L,
+	input r_in,
+	input q_in,
+	output reg Q, input ena);
+
+    always @(posedge clk)
+        begin
+            if(L)
+        Q=r_in;
+            else
+                begin
+                    if(ena)
+           Q=Q^q_in;
+                    else
+         Q= q_in;       
+            
+                end
+        end  
+endmodule
+
+
+module top_module (
+	input [2:0] SW,      // R
+	input [1:0] KEY,     // L and clk
+	output [2:0] LEDR);  // Q
+    
+    reg t1, t2,t3;
+    reg [2:0] temp;
+  assign  temp=LEDR;
+    sub_module instance1 (KEY[0], KEY[1],SW[0], temp[2], t1,0);
+    assign LEDR[0]=t1;
+    sub_module instance2 (KEY[0], KEY[1],SW[1], temp[0], t2,0);
+    assign LEDR[1]=t2;
+    sub_module instance3 (KEY[0], KEY[1],SW[2], temp[1], t3,1'b1);
+    assign LEDR[2]=t3;
+
+endmodule
